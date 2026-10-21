@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BusGo - Modern Bus Management System</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-color: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #1e1b4b;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* Modern Nav Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 35px;
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: 12px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Bus Cards List Grid */
+        .bus-list-grid {
+            display: grid;
+            gap: 15px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .bus-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .bus-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .bus-info h3 {
+            color: #1e293b;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .bus-info p {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .badge {
+            background: #e0e7ff;
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .fare-tag {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #059669;
+        }
+
+        .book-card-btn {
+            padding: 8px 18px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .book-card-btn:hover {
+            opacity: 0.9;
+        }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>🚌 BusGo Portal</h1>
+            <p>Fast, Safe & Comfortable Journey Booking System</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-btn active" onclick="switchTab('view')">Explore Buses</button>
+            <button class="nav-btn" onclick="switchTab('add')">Add New Bus</button>
+            <button class="nav-btn" onclick="switchTab('book')">Book Ticket</button>
+        </div>
+
+        <!-- 1. View Buses Section -->
+        <div id="view-section" class="section active">
+            <div class="bus-list-grid" id="busCardsContainer">
+                <!-- Dynamic Bus Cards Will Appear Here -->
+            </div>
+        </div>
+
+        <!-- 2. Add Bus Section -->
+        <div id="add-section" class="section">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Bus Number</label>
+                    <input type="number" id="busNo" placeholder="e.g. 101">
+                </div>
+                <div class="form-group">
+                    <label>Ticket Fare (₹)</label>
+                    <input type="number" id="fare" placeholder="e.g. 750">
+                </div>
+                <div class="form-group">
+                    <label>Source City</label>
+                    <input type="text" id="source" placeholder="e.g. Patna">
+                </div>
+                <div class="form-group">
+                    <label>Destination City</label>
+                    <input type="text" id="destination" placeholder="e.g. Delhi">
+                </div>
+                <div class="form-group full-width">
+                    <label>Total Seats Available</label>
+                    <input type="number" id="seats" placeholder="e.g. 40">
+                </div>
+            </div>
+            <button class="btn-main" onclick="addBus()">Publish Bus Route</button>
+            <p id="addMessage" class="message"></p>
+        </div>
+
+        <!-- 3. Book Ticket Section -->
+        <div id="book-section" class="section">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Bus Number</label>
+                    <input type="number" id="bookBusNo" placeholder="Enter Bus No">
+                </div>
+                <div class="form-group">
+                    <label>Seats to Book</label>
+                    <input type="number" id="bookSeats" placeholder="Number of seats">
+                </div>
+                <div class="form-group full-width">
+                    <label>Passenger Full Name</label>
+                    <input type="text" id="passengerName" placeholder="Enter your full name">
+                </div>
+            </div>
+            <button class="btn-main" onclick="bookTicket()">Confirm Booking</button>
+            <p id="bookMessage" class="message"></p>
+        </div>
+    </div>
+
+    <script>
+        let buses = JSON.parse(localStorage.getItem('buses')) || [
+            { busNo: 101, source: 'Patna', destination: 'Delhi', totalSeats: 40, availableSeats: 40, fare: 950 },
+            { busNo: 102, source: 'Patna', destination: 'Ranchi', totalSeats: 30, availableSeats: 22, fare: 480 },
+            { busNo: 103, source: 'Patna', destination: 'Varanasi', totalSeats: 35, availableSeats: 35, fare: 550 }
+        ];
+
+        function saveData() {
+            localStorage.setItem('buses', JSON.stringify(buses));
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            
+            if (tab === 'view') {
+                document.querySelectorAll('.nav-btn')[0].classList.add('active');
+                document.getElementById('view-section').classList.add('active');
+                renderBuses();
+            } else if (tab === 'add') {
+                document.querySelectorAll('.nav-btn')[1].classList.add('active');
+                document.getElementById('add-section').classList.add('active');
+            } else if (tab === 'book') {
+                document.querySelectorAll('.nav-btn')[2].classList.add('active');
+                document.getElementById('book-section').classList.add('active');
+            }
+        }
+
+        function renderBuses() {
+            const container = document.getElementById('busCardsContainer');
+            container.innerHTML = '';
+            
+            if (buses.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#64748b; padding:20px;">No buses available right now.</p>`;
+                return;
+            }
+
+            buses.forEach(bus => {
+                const card = `
+                    <div class="bus-card">
+                        <div class="bus-info">
+                            <h3>Bus #${bus.busNo} : ${bus.source} ➔ ${bus.destination}</h3>
+                            <p>Available Seats: <span class="badge">${bus.availableSeats} / ${bus.totalSeats}</span></p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="fare-tag">₹${bus.fare}</div>
+                            <button class="book-card-btn" onclick="quickBook(${bus.busNo})" style="margin-top: 8px;">Book Now</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function addBus() {
+            const busNo = parseInt(document.getElementById('busNo').value);
+            const source = document.getElementById('source').value.trim();
+            const destination = document.getElementById('destination').value.trim();
+            const seats = parseInt(document.getElementById('seats').value);
+            const fare = parseFloat(document.getElementById('fare').value);
+            const msg = document.getElementById('addMessage');
+
+            if (!busNo || !source || !destination || !seats || !fare) {
+                msg.style.color = '#ef4444';
+                msg.innerText = '⚠️ Please fill all input fields!';
+                return;
+            }
+
+            if (buses.some(b => b.busNo === busNo)) {
+                msg.style.color = '#ef4444';
+                msg.innerText = '⚠️ Bus Number already exists!';
+                return;
+            }
+
+            buses.push({ busNo, source, destination, totalSeats: seats, availableSeats: seats, fare });
+            saveData();
+
+            msg.style.color = '#10b981';
+            msg.innerText = '✨ Bus route successfully added!';
+            
+            document.getElementById('busNo').value = '';
+            document.getElementById('source').value = '';
+            document.getElementById('destination').value = '';
+            document.getElementById('seats').value = '';
+            document.getElementById('fare').value = '';
+        }
+
+        function quickBook(busNo) {
+            switchTab('book');
+            document.getElementById('bookBusNo').value = busNo;
+        }
+
+        function bookTicket() {
+            const busNo = parseInt(document.getElementById('bookBusNo').value);
+            const name = document.getElementById('passengerName').value.trim();
+            const seatsToBook = parseInt(document.getElementById('bookSeats').value);
+            const msg = document.getElementById('bookMessage');
+
+            if (!busNo || !name || !seatsToBook) {
+                msg.style.color = '#ef4444';
+                msg.innerText = '⚠️ Please complete all booking details!';
+                return;
+            }
+
+            const bus = buses.find(b => b.busNo === busNo);
+            if (!bus) {
+                msg.style.color = '#ef4444';
+                msg.innerText = '❌ Bus not found!';
+                return;
+            }
+
+            if (bus.availableSeats < seatsToBook) {
+                msg.style.color = '#ef4444';
+                msg.innerText = `❌ Only ${bus.availableSeats} seats remaining!`;
+                return;
+            }
+
+            bus.availableSeats -= seatsToBook;
+            saveData();
+
+            msg.style.color = '#10b981';
+            msg.innerText = `🎉 Success! Total Payable: ₹${bus.fare * seatsToBook}`;
+            
+            document.getElementById('passengerName').value = '';
+            document.getElementById('bookSeats').value = '';
+            document.getElementById('bookBusNo').value = '';
+        }
+
+        renderBuses();
+    </script>
+</body>
+</html>
